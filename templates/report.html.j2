@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <title>Relatório STRIDE - {{ architecture.run_id }}</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 24px; }
+      h1, h2 { margin-bottom: 8px; }
+      .meta { color: #444; margin-bottom: 16px; }
+      table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+      th, td { border: 1px solid #ddd; padding: 8px; vertical-align: top; }
+      th { background: #f5f5f5; text-align: left; }
+      .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: #eee; font-weight: bold; }
+      .S { background: #e3f2fd; }
+      .T { background: #fce4ec; }
+      .R { background: #f3e5f5; }
+      .I { background: #e8f5e9; }
+      .D { background: #fff3e0; }
+      .E { background: #ede7f6; }
+      code { background: #fafafa; padding: 2px 4px; border-radius: 4px; }
+    </style>
+  </head>
+  <body>
+    <h1>Relatório de Modelagem de Ameaças (STRIDE)</h1>
+    <div class="meta">
+      <div><b>Run ID:</b> {{ architecture.run_id }}</div>
+      <div><b>Fonte:</b> {{ architecture.source }}</div>
+      <div><b>Nós detectados:</b> {{ architecture.nodes | length }} | <b>Fluxos:</b> {{ architecture.edges | length }}</div>
+    </div>
+
+    <h2>Componentes (nós)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tipo</th>
+          <th>Label</th>
+          <th>Score</th>
+          <th>Página</th>
+          <th>BBox</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for n in architecture.nodes %}
+        <tr>
+          <td><code>{{ n.id }}</code></td>
+          <td>{{ n.type }}</td>
+          <td>{{ n.label }}</td>
+          <td>{{ "%.2f"|format(n.score or 0) }}</td>
+          <td>{{ n.page }}</td>
+          <td><code>{{ n.bbox }}</code></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Ameaças STRIDE</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Escopo</th>
+          <th>Alvo</th>
+          <th>STRIDE</th>
+          <th>Ameaça</th>
+          <th>Contramedidas</th>
+          <th>Evidência</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in threat_items %}
+        <tr>
+          <td>{{ t.scope }}</td>
+          <td>
+            {% if t.scope == "node" %}
+              <div><code>{{ t.target_id }}</code></div>
+              <div>{{ t.target_label }} ({{ t.target_type }})</div>
+            {% else %}
+              <div><code>{{ t.target_id }}</code></div>
+              <div>{{ t.from }} → {{ t.to }}</div>
+            {% endif %}
+          </td>
+          <td><span class="badge {{ t.stride }}">{{ t.stride }}</span></td>
+          <td>{{ t.threat }}</td>
+          <td>{{ t.mitigation }}</td>
+          <td>
+            {% if t.evidence %}
+              <code>{{ t.evidence }}</code>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Observações do MVP</h2>
+    <ul>
+      <li>Detecção de componentes nesta versão é heurística (baseline). Para avaliação completa, plugar YOLOv8 com dataset anotado.</li>
+      <li>Fluxos podem ser informados via JSON no endpoint <code>/analyze</code> (campo <code>flows_json</code>), caso a inferência automática seja insuficiente.</li>
+    </ul>
+  </body>
+</html>

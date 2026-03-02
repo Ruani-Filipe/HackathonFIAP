@@ -1,0 +1,17 @@
+fastapi==0.115.0
+uvicorn==0.30.6
+pydantic==2.9.2
+python-multipart==0.0.12
+
+jinja2==3.1.4
+
+# Image/PDF handling
+pillow==10.4.0
+pymupdf==1.27.1
+
+# Vision utilities (baseline)
+opencv-python==4.10.0.84
+numpy==2.1.2
+
+# Graph
+networkx==3.3
