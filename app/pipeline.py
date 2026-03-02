@@ -13,6 +13,7 @@ from PIL import Image
 from app.reporting import render_report_html, save_json
 from app.stride import build_stride_threats
 from app.vision.baseline_detector import BaselineDetector
+from app.vision.flow_detector import BaselineFlowDetector
 from app.vision.io import bytes_to_image, image_to_bgr, is_pdf_bytes, pil_to_png_bytes
 
 
@@ -80,11 +81,18 @@ def analyze_file(
             n["page"] = p.name
         nodes.extend(page_nodes)
 
-    # 3) Flows (edges)
-    # MVP: edges are optional. If provided, use override. Otherwise, create empty list.
+    # 3) Flows (edges) - baseline heuristic extraction (optional)
     edges: list[dict[str, Any]] = []
     if flows_override and isinstance(flows_override.get("edges"), list):
         edges = flows_override["edges"]
+    else:
+        flow_detector = BaselineFlowDetector()
+        for p in pages:
+            bgr = image_to_bgr(p.pil)
+            page_edges = flow_detector.detect_edges(bgr=bgr, nodes=nodes, page_name=p.name)
+            for e in page_edges:
+                e["page"] = p.name
+            edges.extend(page_edges)
 
     architecture = {"run_id": run_id, "source": filename, "nodes": nodes, "edges": edges}
 

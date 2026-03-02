@@ -22,5 +22,14 @@ def pil_to_png_bytes(img: Image.Image) -> bytes:
 
 
 def image_to_bgr(img: Image.Image) -> np.ndarray:
+    """
+    Convert PIL image to OpenCV BGR ndarray.
+
+    Important: some inputs are PNGs with alpha (RGBA). If we pass RGBA to
+    cvtColor(RGB2BGR) it breaks or produces unexpected results, which can
+    ruin edge detection. So we normalize to RGB first.
+    """
+    if img.mode != "RGB":
+        img = img.convert("RGB")
     rgb = np.array(img)
     return cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)

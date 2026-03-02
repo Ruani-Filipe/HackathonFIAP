@@ -29,14 +29,28 @@ class BaselineDetector:
         h, w = bgr.shape[:2]
 
         gray = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
+
+        # --- Robust pre-processing (helps on screenshots / low-contrast diagrams) ---
+        # Increase local contrast (CLAHE) + light denoise before edge detection.
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        gray = clahe.apply(gray)
         blur = cv2.GaussianBlur(gray, (5, 5), 0)
-        edges = cv2.Canny(blur, 50, 150)
+
+        # Prefer adaptive threshold for screenshots / diagrams with faint borders.
+        thr = cv2.adaptiveThreshold(
+            blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2
+        )
+        edges = cv2.Canny(thr, 30, 120)
 
         # Close gaps to connect box edges
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
-        closed = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel, iterations=2)
+        closed = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel, iterations=3)
 
-        contours, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        # Extra dilation to help close broken rectangles
+        closed = cv2.dilate(closed, kernel, iterations=1)
+
+        # After closing/dilation, we want inner boxes too (not only the outermost contour).
+        contours, _ = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         nodes: list[dict[str, Any]] = []
         idx = 0
@@ -45,11 +59,13 @@ class BaselineDetector:
             x, y, cw, ch = cv2.boundingRect(c)
 
             area = cw * ch
-            if area < 1500:
+            # Lower threshold to catch smaller boxes (common in screenshots)
+            if area < 600:
                 continue
 
-            # ignore huge background-like rectangles
-            if cw > 0.95 * w and ch > 0.95 * h:
+            # ignore huge background-like rectangles (be more conservative)
+            # Some screenshots have a full-page contour; treat anything covering most of the page as background.
+            if cw > 0.80 * w and ch > 0.80 * h:
                 continue
 
             # aspect ratio filter: keep somewhat box-like regions
@@ -59,8 +75,11 @@ class BaselineDetector:
 
             # approx polygon for "rectangular-ish"
             peri = cv2.arcLength(c, True)
-            approx = cv2.approxPolyDP(c, 0.03 * peri, True)
-            if len(approx) < 4:
+            approx = cv2.approxPolyDP(c, 0.04 * peri, True)
+
+            # If contour is too "line-like", skip. Otherwise accept even if it's not a perfect polygon.
+            # Many diagrams have rounded corners or broken borders.
+            if len(approx) < 3:
                 continue
 
             idx += 1
