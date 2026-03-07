@@ -1,0 +1,77 @@
+{
+  "component": {
+    "S": {
+      "references": [
+        { "type": "OWASP", "id": "A07:2021", "title": "Identification and Authentication Failures" },
+        { "type": "CWE", "id": "CWE-287", "title": "Improper Authentication" }
+      ]
+    },
+    "T": {
+      "references": [
+        { "type": "OWASP", "id": "A03:2021", "title": "Injection" },
+        { "type": "CWE", "id": "CWE-20", "title": "Improper Input Validation" }
+      ]
+    },
+    "R": {
+      "references": [
+        { "type": "OWASP", "id": "A09:2021", "title": "Security Logging and Monitoring Failures" },
+        { "type": "CWE", "id": "CWE-778", "title": "Insufficient Logging" }
+      ]
+    },
+    "I": {
+      "references": [
+        { "type": "OWASP", "id": "A02:2021", "title": "Cryptographic Failures" },
+        { "type": "CWE", "id": "CWE-200", "title": "Exposure of Sensitive Information" }
+      ]
+    },
+    "D": {
+      "references": [
+        { "type": "OWASP", "id": "A10:2021", "title": "Server-Side Request Forgery (SSRF) / Resilience topics" },
+        { "type": "CWE", "id": "CWE-400", "title": "Uncontrolled Resource Consumption" }
+      ]
+    },
+    "E": {
+      "references": [
+        { "type": "OWASP", "id": "A01:2021", "title": "Broken Access Control" },
+        { "type": "CWE", "id": "CWE-269", "title": "Improper Privilege Management" }
+      ]
+    }
+  },
+  "flow": {
+    "S": {
+      "references": [
+        { "type": "OWASP", "id": "A07:2021", "title": "Identification and Authentication Failures" },
+        { "type": "CWE", "id": "CWE-295", "title": "Improper Certificate Validation" }
+      ]
+    },
+    "T": {
+      "references": [
+        { "type": "OWASP", "id": "A02:2021", "title": "Cryptographic Failures" },
+        { "type": "CWE", "id": "CWE-353", "title": "Missing Support for Integrity Check" }
+      ]
+    },
+    "R": {
+      "references": [
+        { "type": "OWASP", "id": "A09:2021", "title": "Security Logging and Monitoring Failures" },
+        { "type": "CWE", "id": "CWE-223", "title": "Omission of Security-relevant Information" }
+      ]
+    },
+    "I": {
+      "references": [
+        { "type": "OWASP", "id": "A02:2021", "title": "Cryptographic Failures" },
+        { "type": "CWE", "id": "CWE-319", "title": "Cleartext Transmission of Sensitive Information" }
+      ]
+    },
+    "D": {
+      "references": [
+        { "type": "CWE", "id": "CWE-400", "title": "Uncontrolled Resource Consumption" }
+      ]
+    },
+    "E": {
+      "references": [
+        { "type": "OWASP", "id": "A01:2021", "title": "Broken Access Control" },
+        { "type": "CWE", "id": "CWE-862", "title": "Missing Authorization" }
+      ]
+    }
+  }
+}

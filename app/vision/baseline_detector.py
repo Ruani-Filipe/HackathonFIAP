@@ -19,10 +19,8 @@ class Detection:
 
 class BaselineDetector:
     """
-    Baseline heuristic detector:
-    - Finds rectangular-ish contours as "components"
-    - Classifies coarsely as "component"
-    - Intended as fallback; a supervised detector (YOLO) should replace this.
+    Heuristic detector that finds rectangular-ish contours.
+    `score` is a heuristic confidence derived from shape features (not a ML probability).
     """
 
     def detect(self, bgr: np.ndarray, page_name: str) -> list[dict[str, Any]]:
@@ -82,13 +80,24 @@ class BaselineDetector:
             if len(approx) < 3:
                 continue
 
+            # Heuristic score: combine "rectangular-ness" and size sanity.
+            # - More polygon vertices (up to a point) tends to indicate a box-like shape.
+            # - Extremely thin rectangles are less likely to be components.
+            rectness = min(len(approx), 8) / 8.0  # 0..1
+            ar_penalty = 1.0
+            if ar < 0.35 or ar > 4.0:
+                ar_penalty = 0.7
+            area_norm = min(area / float(w * h + 1e-6), 0.20) / 0.20  # 0..1 (cap at 20% of page)
+            score = 0.15 + 0.55 * rectness * ar_penalty + 0.30 * area_norm
+            score = float(max(0.05, min(score, 0.95)))
+
             idx += 1
             nodes.append(
                 {
                     "id": f"{page_name}_n{idx}",
                     "type": "component",
                     "label": "component",
-                    "score": 0.30,
+                    "score": score,
                     "bbox": {"x1": int(x), "y1": int(y), "x2": int(x + cw), "y2": int(y + ch)},
                 }
             )

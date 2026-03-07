@@ -42,19 +42,23 @@
       </thead>
       <tbody>
         {% for n in architecture.nodes %}
-        <tr>
-          <td><code>{{ n.id }}</code></td>
-          <td>{{ n.type }}</td>
-          <td>{{ n.label }}</td>
-          <td>{{ "%.2f"|format(n.score or 0) }}</td>
-          <td>{{ n.page }}</td>
-          <td><code>{{ n.bbox }}</code></td>
-        </tr>
+          {% if n.type and n.type != "component" %}
+          <tr>
+            <td><code>{{ n.id }}</code></td>
+            <td>{{ n.type }}</td>
+            <td>{{ n.label }}</td>
+            <td>{{ "%.2f"|format(n.score or 0) }}</td>
+            <td>{{ n.page }}</td>
+            <td><code>{{ n.bbox }}</code></td>
+          </tr>
+          {% endif %}
         {% endfor %}
       </tbody>
     </table>
 
     <h2>Ameaças STRIDE</h2>
+
+    {% if threat_items and (threat_items|length) > 0 %}
     <table>
       <thead>
         <tr>
@@ -63,6 +67,7 @@
           <th>STRIDE</th>
           <th>Ameaça</th>
           <th>Contramedidas</th>
+          <th>Referências</th>
           <th>Evidência</th>
         </tr>
       </thead>
@@ -83,6 +88,13 @@
           <td>{{ t.threat }}</td>
           <td>{{ t.mitigation }}</td>
           <td>
+            {% if t.references %}
+              {% for r in t.references %}
+                <div><code>{{ r.type }} {{ r.id }}</code> — {{ r.title }}</div>
+              {% endfor %}
+            {% endif %}
+          </td>
+          <td>
             {% if t.evidence %}
               <code>{{ t.evidence }}</code>
             {% endif %}
@@ -91,6 +103,9 @@
         {% endfor %}
       </tbody>
     </table>
+    {% else %}
+      <p>Nenhuma ameaça STRIDE aplicável foi inferida para este diagrama com as heurísticas atuais.</p>
+    {% endif %}
 
     <h2>Observações do MVP</h2>
     <ul>

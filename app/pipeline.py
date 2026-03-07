@@ -15,6 +15,7 @@ from app.stride import build_stride_threats
 from app.vision.baseline_detector import BaselineDetector
 from app.vision.flow_detector import BaselineFlowDetector
 from app.vision.io import bytes_to_image, image_to_bgr, is_pdf_bytes, pil_to_png_bytes
+from app.vision.ocr import OcrConfig, ocr_bbox_text, ocr_full_text
 
 
 @dataclass(frozen=True)
@@ -74,11 +75,116 @@ def analyze_file(
     # 2) Detect components (baseline heuristic detector)
     detector = BaselineDetector()
     nodes: list[dict[str, Any]] = []
+
+    # OCR: fill node labels from diagram text when it's reliable enough.
+    ocr_cfg = OcrConfig(enabled=True)
+
+    def _looks_like_good_label(txt: str) -> bool:
+        t = " ".join((txt or "").split()).strip()
+        if not t:
+            return False
+        if len(t) < 4 or len(t) > 32:
+            return False
+
+        # Only allow letters/digits/spaces and a few safe separators
+        allowed = set("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 -_/()")
+        if any(ch not in allowed for ch in t):
+            return False
+
+        letters = sum(ch.isalpha() for ch in t)
+        if letters < 4:
+            return False
+
+        # Discard OCR garbage: too few vowels among letters
+        lt = "".join(ch.lower() for ch in t if ch.isalpha())
+        if lt:
+            vowels = sum(ch in "aeiou" for ch in lt)
+            if vowels / max(len(lt), 1) < 0.28:
+                return False
+
+        # Require at least one "dictionary-ish" token used in architecture labels,
+        # unless it's clearly TitleCase with >=2 words.
+        kw = [
+            "service",
+            "database",
+            "db",
+            "api",
+            "gateway",
+            "server",
+            "queue",
+            "cache",
+            "storage",
+            "auth",
+            "identity",
+            "user",
+            "client",
+            "frontend",
+            "backend",
+            "worker",
+            "lambda",
+        ]
+        tl = t.lower()
+        has_kw = any(k in tl for k in kw)
+        if not has_kw:
+            # allow "Title Case" with >= 2 words (e.g., "Order Service")
+            parts = t.split()
+            if len(parts) < 2:
+                return False
+            if not all(p[:1].isupper() for p in parts if p):
+                return False
+
+        # avoid weird sequences
+        if any(seq in tl for seq in ["iii", "lll", "___"]):
+            return False
+
+        return True
+
+    # Fallback OCR: scan full page once to learn if common keywords exist in the diagram at all.
+    # This helps decide whether to run more aggressive padding OCR and type inference.
+    full_page_vocab: dict[str, set[str]] = {}
+    for p in pages:
+        try:
+            full_txt = ocr_full_text(p.pil, ocr_cfg).lower()
+        except Exception:
+            full_txt = ""
+        vocab = set()
+        for k in [
+            "service",
+            "database",
+            "db",
+            "api",
+            "gateway",
+            "server",
+            "queue",
+            "cache",
+            "storage",
+            "auth",
+            "identity",
+            "user",
+            "client",
+        ]:
+            if k in full_txt:
+                vocab.add(k)
+        full_page_vocab[p.name] = vocab
+
     for p in pages:
         bgr = image_to_bgr(p.pil)
         page_nodes = detector.detect(bgr=bgr, page_name=p.name)
-        for n in page_nodes:
+        for i, n in enumerate(page_nodes, start=1):
             n["page"] = p.name
+
+            # Fill label with OCR text (fallback to existing label if OCR is empty)
+            bb = n.get("bbox") or {}
+            if bb:
+                if i == 1 or i % 25 == 0:
+                    print(f"[OCR] page={p.name} node {i}/{len(page_nodes)} ...")
+
+                # If the page has relevant words, allow bigger padding to capture labels near borders.
+                pad = 18 if full_page_vocab.get(p.name) else 10
+                txt = ocr_bbox_text(p.pil, bb, ocr_cfg, pad=pad)
+                if _looks_like_good_label(txt):
+                    n["label"] = txt
+
         nodes.extend(page_nodes)
 
     # 3) Flows (edges) - baseline heuristic extraction (optional)

@@ -1,0 +1,563 @@
+{
+  "run_id": "imagem5_88a6287ab38578cc",
+  "items": [
+    {
+      "scope": "node",
+      "target_id": "imagem5_n9",
+      "target_label": "Service",
+      "target_type": "service",
+      "stride": "T",
+      "threat": "Adulteração de dados em trânsito/armazenamento.",
+      "mitigation": "TLS ponta-a-ponta, assinatura/integração de mensagens, controles de integridade, WORM/auditoria.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A03:2021",
+          "title": "Injection"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-20",
+          "title": "Improper Input Validation"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 1593,
+          "y1": 1947,
+          "x2": 1815,
+          "y2": 2010
+        },
+        "page": "imagem5",
+        "score": 0.4300017833709705
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n9",
+      "target_label": "Service",
+      "target_type": "service",
+      "stride": "D",
+      "threat": "Negação de serviço (indisponibilidade).",
+      "mitigation": "Rate limit, circuit breaker, autoscaling, filas, caching, proteção DDoS.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A10:2021",
+          "title": "Server-Side Request Forgery (SSRF) / Resilience topics"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-400",
+          "title": "Uncontrolled Resource Consumption"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 1593,
+          "y1": 1947,
+          "x2": 1815,
+          "y2": 2010
+        },
+        "page": "imagem5",
+        "score": 0.4300017833709705
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n10",
+      "target_label": "Service",
+      "target_type": "service",
+      "stride": "T",
+      "threat": "Adulteração de dados em trânsito/armazenamento.",
+      "mitigation": "TLS ponta-a-ponta, assinatura/integração de mensagens, controles de integridade, WORM/auditoria.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A03:2021",
+          "title": "Injection"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-20",
+          "title": "Improper Input Validation"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 300,
+          "y1": 1947,
+          "x2": 521,
+          "y2": 2027
+        },
+        "page": "imagem5",
+        "score": 0.5688228607177719
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n10",
+      "target_label": "Service",
+      "target_type": "service",
+      "stride": "D",
+      "threat": "Negação de serviço (indisponibilidade).",
+      "mitigation": "Rate limit, circuit breaker, autoscaling, filas, caching, proteção DDoS.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A10:2021",
+          "title": "Server-Side Request Forgery (SSRF) / Resilience topics"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-400",
+          "title": "Uncontrolled Resource Consumption"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 300,
+          "y1": 1947,
+          "x2": 521,
+          "y2": 2027
+        },
+        "page": "imagem5",
+        "score": 0.5688228607177719
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n17",
+      "target_label": "Database",
+      "target_type": "database",
+      "stride": "T",
+      "threat": "Alteração não autorizada de dados (corrupção, update/delete indevidos).",
+      "mitigation": "Controles de integridade, constraints, trilhas de auditoria, backups e point-in-time recovery.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A03:2021",
+          "title": "Injection"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-20",
+          "title": "Improper Input Validation"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 1519,
+          "y1": 1866,
+          "x2": 1800,
+          "y2": 1923
+        },
+        "page": "imagem5",
+        "score": 0.3001031255722032
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n17",
+      "target_label": "Database",
+      "target_type": "database",
+      "stride": "I",
+      "threat": "Vazamento de dados por permissões excessivas ou falta de criptografia.",
+      "mitigation": "Least privilege, criptografia em repouso, KMS, masking/tokenização, segregação por schema.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A02:2021",
+          "title": "Cryptographic Failures"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-200",
+          "title": "Exposure of Sensitive Information"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 1519,
+          "y1": 1866,
+          "x2": 1800,
+          "y2": 1923
+        },
+        "page": "imagem5",
+        "score": 0.3001031255722032
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n19",
+      "target_label": "Database",
+      "target_type": "database",
+      "stride": "T",
+      "threat": "Alteração não autorizada de dados (corrupção, update/delete indevidos).",
+      "mitigation": "Controles de integridade, constraints, trilhas de auditoria, backups e point-in-time recovery.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A03:2021",
+          "title": "Injection"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-20",
+          "title": "Improper Input Validation"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 857,
+          "y1": 1866,
+          "x2": 1138,
+          "y2": 1923
+        },
+        "page": "imagem5",
+        "score": 0.3001031255722032
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n19",
+      "target_label": "Database",
+      "target_type": "database",
+      "stride": "I",
+      "threat": "Vazamento de dados por permissões excessivas ou falta de criptografia.",
+      "mitigation": "Least privilege, criptografia em repouso, KMS, masking/tokenização, segregação por schema.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A02:2021",
+          "title": "Cryptographic Failures"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-200",
+          "title": "Exposure of Sensitive Information"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 857,
+          "y1": 1866,
+          "x2": 1138,
+          "y2": 1923
+        },
+        "page": "imagem5",
+        "score": 0.3001031255722032
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n21",
+      "target_label": "Database",
+      "target_type": "database",
+      "stride": "T",
+      "threat": "Alteração não autorizada de dados (corrupção, update/delete indevidos).",
+      "mitigation": "Controles de integridade, constraints, trilhas de auditoria, backups e point-in-time recovery.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A03:2021",
+          "title": "Injection"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-20",
+          "title": "Improper Input Validation"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 208,
+          "y1": 1866,
+          "x2": 490,
+          "y2": 1926
+        },
+        "page": "imagem5",
+        "score": 0.3004260635375962
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n21",
+      "target_label": "Database",
+      "target_type": "database",
+      "stride": "I",
+      "threat": "Vazamento de dados por permissões excessivas ou falta de criptografia.",
+      "mitigation": "Least privilege, criptografia em repouso, KMS, masking/tokenização, segregação por schema.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A02:2021",
+          "title": "Cryptographic Failures"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-200",
+          "title": "Exposure of Sensitive Information"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 208,
+          "y1": 1866,
+          "x2": 490,
+          "y2": 1926
+        },
+        "page": "imagem5",
+        "score": 0.3004260635375962
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n174",
+      "target_label": "P Database",
+      "target_type": "database",
+      "stride": "T",
+      "threat": "Alteração não autorizada de dados (corrupção, update/delete indevidos).",
+      "mitigation": "Controles de integridade, constraints, trilhas de auditoria, backups e point-in-time recovery.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A03:2021",
+          "title": "Injection"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-20",
+          "title": "Improper Input Validation"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 198,
+          "y1": 1336,
+          "x2": 556,
+          "y2": 1457
+        },
+        "page": "imagem5",
+        "score": 0.44049172401427855
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n174",
+      "target_label": "P Database",
+      "target_type": "database",
+      "stride": "I",
+      "threat": "Vazamento de dados por permissões excessivas ou falta de criptografia.",
+      "mitigation": "Least privilege, criptografia em repouso, KMS, masking/tokenização, segregação por schema.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A02:2021",
+          "title": "Cryptographic Failures"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-200",
+          "title": "Exposure of Sensitive Information"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 198,
+          "y1": 1336,
+          "x2": 556,
+          "y2": 1457
+        },
+        "page": "imagem5",
+        "score": 0.44049172401427855
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n245",
+      "target_label": "Payrhent -Service_",
+      "target_type": "service",
+      "stride": "T",
+      "threat": "Adulteração de dados em trânsito/armazenamento.",
+      "mitigation": "TLS ponta-a-ponta, assinatura/integração de mensagens, controles de integridade, WORM/auditoria.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A03:2021",
+          "title": "Injection"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-20",
+          "title": "Improper Input Validation"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 834,
+          "y1": 794,
+          "x2": 1203,
+          "y2": 1015
+        },
+        "page": "imagem5",
+        "score": 0.6604141950607231
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n245",
+      "target_label": "Payrhent -Service_",
+      "target_type": "service",
+      "stride": "D",
+      "threat": "Negação de serviço (indisponibilidade).",
+      "mitigation": "Rate limit, circuit breaker, autoscaling, filas, caching, proteção DDoS.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A10:2021",
+          "title": "Server-Side Request Forgery (SSRF) / Resilience topics"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-400",
+          "title": "Uncontrolled Resource Consumption"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 834,
+          "y1": 794,
+          "x2": 1203,
+          "y2": 1015
+        },
+        "page": "imagem5",
+        "score": 0.6604141950607231
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n246",
+      "target_label": "See User Service --",
+      "target_type": "user",
+      "stride": "T",
+      "threat": "Adulteração de dados em trânsito/armazenamento.",
+      "mitigation": "TLS ponta-a-ponta, assinatura/integração de mensagens, controles de integridade, WORM/auditoria.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A03:2021",
+          "title": "Injection"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-20",
+          "title": "Improper Input Validation"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 8,
+          "y1": 791,
+          "x2": 378,
+          "y2": 1016
+        },
+        "page": "imagem5",
+        "score": 0.6610225200653006
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n246",
+      "target_label": "See User Service --",
+      "target_type": "user",
+      "stride": "D",
+      "threat": "Negação de serviço (indisponibilidade).",
+      "mitigation": "Rate limit, circuit breaker, autoscaling, filas, caching, proteção DDoS.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A10:2021",
+          "title": "Server-Side Request Forgery (SSRF) / Resilience topics"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-400",
+          "title": "Uncontrolled Resource Consumption"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 8,
+          "y1": 791,
+          "x2": 378,
+          "y2": 1016
+        },
+        "page": "imagem5",
+        "score": 0.6610225200653006
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n322",
+      "target_label": "API Gateway",
+      "target_type": "api_gateway",
+      "stride": "T",
+      "threat": "Adulteração de dados em trânsito/armazenamento.",
+      "mitigation": "TLS ponta-a-ponta, assinatura/integração de mensagens, controles de integridade, WORM/auditoria.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A03:2021",
+          "title": "Injection"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-20",
+          "title": "Improper Input Validation"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 821,
+          "y1": 20,
+          "x2": 1202,
+          "y2": 233
+        },
+        "page": "imagem5",
+        "score": 0.5915225744247368
+      }
+    },
+    {
+      "scope": "node",
+      "target_id": "imagem5_n322",
+      "target_label": "API Gateway",
+      "target_type": "api_gateway",
+      "stride": "D",
+      "threat": "Negação de serviço (indisponibilidade).",
+      "mitigation": "Rate limit, circuit breaker, autoscaling, filas, caching, proteção DDoS.",
+      "references": [
+        {
+          "type": "OWASP",
+          "id": "A10:2021",
+          "title": "Server-Side Request Forgery (SSRF) / Resilience topics"
+        },
+        {
+          "type": "CWE",
+          "id": "CWE-400",
+          "title": "Uncontrolled Resource Consumption"
+        }
+      ],
+      "evidence": {
+        "bbox": {
+          "x1": 821,
+          "y1": 20,
+          "x2": 1202,
+          "y2": 233
+        },
+        "page": "imagem5",
+        "score": 0.5915225744247368
+      }
+    }
+  ]
+}

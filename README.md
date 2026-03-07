@@ -21,11 +21,13 @@ Este repositório contém um **MVP funcional** que:
 - Para cada componente identificado, o sistema gera ameaças/contramedidas em STRIDE.
 - Implementação: `app/stride.py` + relatório HTML via Jinja (`templates/report.html.j2`).
 
-### 1.3 Base para evolução: dataset → anotação → treino supervisionado
-O MVP já separa claramente a etapa de **detecção** (visão) do resto do pipeline. Para evoluir:
-- substituir `BaselineDetector` por um detector treinado (YOLOv8/Detectron2);
-- criar dataset e anotação;
-- treinar e plugar no pipeline.
+### 1.3 Aderência rápida (sem treinar modelo agora)
+Para o deadline, focamos em melhorias que aumentam a aderência sem exigir treino supervisionado:
+- **OCR no bbox** para preencher `label` dos nós com texto do próprio diagrama (explicabilidade);
+- **extração heurística de fluxos** (HoughLinesP + proximidade) para preencher `edges`;
+- **referências OWASP/CWE** anexadas às ameaças STRIDE (campo `references` + coluna no report).
+
+(Como evolução futura, o `BaselineDetector` pode ser substituído por um detector treinado, ex.: YOLOv8.)
 
 ---
 
@@ -38,7 +40,9 @@ O MVP já separa claramente a etapa de **detecção** (visão) do resto do pipel
   Orquestra o pipeline:
   - PDF → imagens
   - detecção de componentes
-  - geração STRIDE
+  - OCR (labels por bbox + fallback global)
+  - detecção de fluxos (heurística)
+  - geração STRIDE (com filtro para não inflar)
   - escrita dos artefatos
 
 - `app/vision/`
@@ -122,7 +126,8 @@ Validação rápida:
 Contém `items` com ameaças/contramedidas e vínculo ao alvo (`target_id`).
 
 Validação rápida:
-- Se existem N nós, normalmente existem ~`6 * N` itens (S/T/R/I/D/E por nó).
+- O MVP **não** emite STRIDE “automático” para tudo: só gera ameaças quando há **gatilhos plausíveis** (label/tipo).
+- Em diagramas onde o OCR não extrai palavras-chave suficientes, `threats.json` pode vir com poucos (ou zero) itens — por design, para evitar “inventar” ameaças.
 
 ### 5.4 `report.html` (entregável final)
 Relatório legível com:
@@ -139,33 +144,38 @@ O `report.html` é gravado forçando UTF-8 no `app/pipeline.py` para evitar prob
 
 ---
 
-## 6) Como isso se conecta com o “projeto final” (próximos passos)
+## 6) O que mostrar no vídeo (roteiro rápido)
 
-Para atender a proposta completa (modelo supervisionado + vulnerabilidades por componente):
+1) **Rodar a análise** (CLI):
+```powershell
+python -m app.cli_analyze --input "C:\\Users\\devru\\OneDrive\\Área de Trabalho\\evidencia1.png" --out ".\\outputs"
+```
 
-1) **Dataset de diagramas**  
-   - coletar imagens de arquitetura (draw.io, slides, docs, artigos, etc.)
-   - normalizar resolução e formatos
+2) **Abrir o report** e explicar as 3 partes:
+- **Componentes (nós)**: cada linha é um elemento detectado no diagrama.
+  - `BBox`: onde está o elemento na imagem (prova/rastreabilidade).
+  - `Label`: texto extraído via OCR (quando disponível).
+- **Fluxos (edges)**: conexões inferidas entre nós (heurístico).
+- **Ameaças STRIDE**: ameaças por nó/fluxo + contramedidas.
+  - **Referências**: OWASP/CWE anexadas para dar base técnica.
 
-2) **Anotação**  
-   - ferramentas: Label Studio / Roboflow / CVAT
-   - classes sugeridas: `user`, `server`, `database`, `api`, `queue`, `storage`, `external_system`, etc.
+3) **Mostrar os artefatos** em `outputs/<run_id>/artifacts/`:
+- `architecture.json`: nós + fluxos com bbox.
+- `threats.json`: STRIDE com `references`.
+- `report.html`: relatório final.
 
-3) **Treino supervisionado**
-   - sugestão: YOLOv8 (ultralytics)
-   - exportar o modelo e carregar no pipeline no lugar do `BaselineDetector`
+## 7) Documentação do fluxo de desenvolvimento
+- Detalhamento completo do pipeline, iterações e limitações: `docs/FLUXO_DESENVOLVIMENTO.md`
 
-4) **Extração de fluxos**
-   - detectar setas/linhas (ou anotar fluxos também)
-   - gerar `edges` automaticamente
-
-5) **Vulnerabilidades e contramedidas específicas**
-   - mapear tipo de componente → CWE/OWASP ASVS/OWASP Top 10/CAPEC
-   - enriquecer o `threats.json` e o `report.html` com referências
+## 8) Evoluções futuras (se houver tempo depois)
+- Classificação real de componentes (user/api/database etc.) via modelo supervisionado.
+- Detecção robusta de setas/direção (arrowheads) para melhorar `edges`.
+- OCR mais robusto (ex.: PaddleOCR/EasyOCR + detecção de texto CRAFT/EAST).
+- Enriquecimento de KB (CAPEC/ASVS) e severidade/priorização.
 
 ---
 
-## 7) Troubleshooting
+## 9) Troubleshooting
 
 ### “Não detectou componentes”
 Normal no baseline. A heurística depende muito do estilo do diagrama (caixas, bordas, contraste).  
@@ -178,5 +188,5 @@ O projeto força UTF-8 ao gravar o `report.html`. Se você ainda ver problema:
 
 ---
 
-## 8) Licença
+## 10) Licença
 Defina a licença que preferir (MIT, Apache-2.0 etc.) antes de publicar no GitHub.
